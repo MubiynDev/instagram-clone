@@ -9,8 +9,8 @@ module.exports = async (req, res, next) => {
         const payload = verifyJWT(token);
 
         if(!payload) {
-            throw new Error("You are not logged");
-            // res.redirect("/users/login")
+            // throw new Error("You are not logged");
+            res.redirect("/users/login")
         } 
 
         const session = await sessions.findById(payload.sessionId);
