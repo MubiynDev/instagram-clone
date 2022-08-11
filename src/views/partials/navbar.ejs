@@ -1,0 +1,38 @@
+<nav class="navbar">
+    <div class="nav-wrapper">
+        <img src="/public/images/logo.PNG" class="brand-img" alt="">
+        <input type="text" class="search-box" placeholder="search">
+        <div class="nav-items">
+            <img src="/public/images/home.PNG" class="icon" alt="">
+            <a href="/direct"><img src="/public/images/messenger.PNG"  class="icon" alt=""></a>
+            <img src="/public/images/add.PNG" class="icon" alt="">
+            <img src="/public/images/explore.PNG" class="icon" alt="">
+            <img src="/public/images/like.PNG" class="icon" alt="">
+            <div class="icon user-profile"></div>
+        </div>
+    </div>
+</nav>
+
+ <!-- <div class="search-result-modal">
+    <ul>
+
+    </ul>
+ </div> -->
+
+<script>
+    const searchInput = document.querySelector(".search-box")
+    searchInput.addEventListener("keyup", async (e) => {
+        let searchText = e.target.value
+        searchText = searchText.toLowerCase()
+        
+        console.log(searchText)
+        let response  = await fetch(`/users/search?q='${searchText}'`)
+
+        response = await response.json()
+    
+        const newLi = `<li>
+
+            </li>`
+        console.log(response)
+    })
+</script>

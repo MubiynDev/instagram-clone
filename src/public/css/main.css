@@ -1,0 +1,15 @@
+.main{
+    width: 100%;
+    padding: 40px 0;
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.wrapper{
+    width: 70%;
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    grid-gap: 30px;
+}

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/public/css/chat.css">
+    <title>Chat</title>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="container">
+        <div class="left">
+            <div class="top">
+                <input type="text" placeholder="Search" />
+                <a href="javascript:;" class="search"></a>
+            </div>
+            <ul class="people">
+                <% chats.forEach(chat => {  %>
+                    <li class="person" data-chat="person1">
+                        <a href="/direct/<%=chat.username%>">
+                            <img src="<%=chat.avatar%>" alt="" />
+                            <span class="name"><%=chat.fullName%></span>
+                            <!--                        <span class="time">2:09 PM</span>-->
+                            <!--                        <span class="preview">I was wondering...</span>-->
+                        </a>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+        <div class="right">
+            <% if(isChatSelected) { %>
+            <div class="top"><span>To: <span class="name"><%=user.fullName%></span></span></div>
+            <div class="chat">
+<!--                <div class="conversation-start">-->
+<!--                    <span>Today, 6:48 AM</span>-->
+<!--                </div>-->
+                <% messages.forEach(message => { %>
+                    <div class="bubble <%=message.senderId.toString() === profileOwner._id.toString() ? 'me' : 'you'%>">
+                        <%=message.text%>
+                    </div>
+                <% }) %>
+            </div>
+            <div class="write">
+                <a href="javascript:;" class="write-link attach"></a>
+                <input type="text" />
+                <a href="javascript:;" class="write-link smiley"></a>
+                <a href="javascript:;" class="write-link send" data-sender-id="<%=profileOwner._id%>" data-receiver-id="<%=user._id%>"></a>
+            </div>
+            <% } else { %>
+                <p>Select chat</p>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<script src="/socket/socket.io.js"></script>
+<script>
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+    const socket = io()
+    socket.on("connect", () => {
+        const token = getCookie('token')
+        socket.emit('token', token)
+    })
+    // socket.on("new_user", user => {
+    //     const newUserElement = `<li class="person" data-chat="person1">
+    //                     <a href="/direct/${user.username}">
+    //                         <img src="${user.avatar}" alt="" />
+    //                         <span class="name">${user.fullName}</span>
+    //                         <!--                        <span class="time">2:09 PM</span>-->
+    //                         <!--                        <span class="preview">I was wondering...</span>-->
+    //                     </a>
+    //                 </li>`
+    //     document.querySelector('.people').innerHTML += newUserElement
+    // })
+    const sendBtn = document.querySelector('a.send');
+    const messageText = document.querySelector('.write').querySelector('input');
+    socket.on("new_message", message => {
+        const chatElement = document.querySelector('.chat');
+        const newMessage = `<div class="bubble you">${message.text}</div>`;
+        chatElement.innerHTML += newMessage
+    })
+    sendBtn.addEventListener('click', async e => {
+        console.log(true)
+        const text = messageText.value;
+        const senderId = e.target.dataset.senderId;
+        const receiverId = e.target.dataset.receiverId;
+        if(text) {
+           socket.emit('new_message', {
+              senderId,
+              receiverId,
+              text
+           })
+           const chatElement = document.querySelector('.chat');
+           const newMessage = `<div class="bubble me">${text}</div>`;
+           chatElement.innerHTML += newMessage
+
+           messageText.value = ""
+           messageText.focus()
+           
+        }
+        //
+    })
+</script>
+
+</body>
+</html>

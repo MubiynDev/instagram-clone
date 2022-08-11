@@ -1,0 +1,11 @@
+
+<div class="status-wrapper">
+    <% users.forEach(user => { %>
+        <a href="/users/<%=user.username%>">
+            <div class="status-card">
+                <div class="profile-pic"><img src="<%=user.avatar%>" alt=""></div>
+                <p class="username"><%=user.username%></p>
+            </div>
+        </a>
+    <% }) %>
+</div>

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/public/css/navbar.css">
+    <link rel="stylesheet" href="/public/css/post.css">
+    <link rel="stylesheet" href="/public/css/recommendations.css">
+    <link rel="stylesheet" href="/public/css/stories.css">
+    <link rel="stylesheet" href="/public/css/main.css">
+    <title>Instagram | Posts</title>
+</head>
+<body>
+<%-include("partials/navbar")%>
+
+<section class="main">
+    <div class="wrapper">
+        <div class="left-col">
+            <%-include("partials/stories")%>
+            <%-include("partials/post")%>
+        </div>
+        <div class="right-col">
+            <div class="profile-card">
+                <div class="profile-pic">
+                    <img src="<%=user.avatar%>" alt="">
+                </div>
+                <div>
+                    <p class="username"><%=user.username%></p>
+                    <p class="sub-text"><%=user.fullName%></p>
+                </div>
+                <button class="action-btn">switch</button>
+            </div>
+<!--            <%-include("partials/recommendations")%>-->
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,238 @@
+<% var isConfirmationCodeSent = false %>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" href="/public/css/profile.css">
+    <script src="https://kit.fontawesome.com/d5f1eb1970.js" crossorigin="anonymous"></script>
+    <title>Profile</title>
+</head>
+<body>
+<header>
+
+    <div class="container">
+
+        <% if(!user.isConfirmed) { %>
+            <div class="alert alert-warning d-flex justify-content-between mt-3" id="confirmationAlert" role="alert">
+                    <p>Your phone number was not confirmed</p>
+                    <button id="sendCode" class="btn btn-primary">Send confirmation code</button>
+            </div>
+        <% } %>
+
+        <div class="profile">
+
+            <div class="profile-image">
+
+                <label for="avatar">
+                    <img src="<%=user.avatar%>" alt="">
+                </label>
+                <% if(isProfileOwn) { %>
+                    <input type="file" id="avatar" style="display: none">
+                <% } %>
+            </div>
+
+            <div class="profile-user-settings">
+
+                <h1 class="profile-user-name"><%=user.username%></h1>
+
+                <% if(isProfileOwn) { %>
+                    <button class="btn profile-edit-btn" data-bs-toggle="modal" data-bs-target="#settingsModal">Edit Profile</button>
+                    <button class="btn profile-settings-btn" aria-label="profile settings"  data-bs-toggle="modal" data-bs-target="#newPostModal"><i class="fas fa-plus" aria-hidden="true"></i></button>
+                <% } %>
+
+            </div>
+
+            <div class="profile-stats">
+                
+                <ul>
+                    <li><span class="profile-stat-count"><%=posts.length%></span> posts</li>
+                    <li><span class="profile-stat-count"><%=user.followers.length%></span> <a style="text-decoration: none; color: black;" href="/users/<%=user.username%>/followers">followers</a></li>
+                    <li><span class="profile-stat-count"><%=user.followings.length%></span> <a style="text-decoration: none; color: black;" href="/users/<%=user.username%>/followings">following</a></li>                </ul>
+
+                <%if(!isProfileOwn) {%>
+                    <% if(isFollowed) { %>
+                        <a href="/users/<%=user.username%>/unfollow" class="unfollow-link">Unfollow</a>
+                    <% } else { %>
+                        <a href="/users/<%=user.username%>/follow" class="follow-link">Follow</a>
+                    <% } %>
+                <% } %>
+
+            </div>
+
+            
+
+            <div class="profile-bio">
+
+                <p><span class="profile-real-name"><%=user.fullName%> </span><%=user.bio%></p>
+
+            </div>
+
+        </div>
+        <!-- End of profile section -->
+
+    </div>
+    <!-- End of container -->
+
+</header>
+
+<main>
+
+    <div class="container">
+
+        <div class="gallery">
+
+            <% posts.forEach(post => { %>
+                <div class="gallery-item" tabindex="0">
+                <img src="<%=post.src%>" class="gallery-image" alt="">
+                <div class="gallery-item-info">
+                    <ul>
+                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i class="fas fa-heart" aria-hidden="true"></i> <%=post.likes.length%></li>
+                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i class="fas fa-comment" aria-hidden="true"></i> <%=post.comments.lenth%></li>
+                    </ul>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+        <!-- End of gallery -->
+    </div>
+    <!-- End of container -->
+
+</main>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/users/<%=user._id%>/edit-profile" method="POST">
+                    <div class="form-floating mb-3">
+                        <input type="text" value="<%=user.fullName%>" class="form-control" name="fullName" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput">Full Name</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" value="<%=user.username%>" class="form-control" name="username" id="floatingPassword" placeholder="Password">
+                        <label for="floatingPassword">username</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" value="<%=user.bio%>" name="bio" placeholder="Leave a comment here" id="floatingTextarea"></textarea>
+                        <label for="floatingTextarea">Bio</label>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-primary w-100">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- New Post Modal -->
+<div class="modal fade" id="newPostModal" tabindex="-1" aria-labelledby="newPostModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">New Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="newPostForm">
+                    <div class="form-floating mb-3">
+                        <input type="file"  class="form-control" name="post" id="floatingInput" placeholder="name@example.com">
+                        <label for="floatingInput">Post</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" name="description" id="floatingTextarea"></textarea>
+                        <label for="floatingTextarea">Description</label>
+                    </div>
+                    <button type="submit" class="btn btn-lg btn-primary w-100">Submit</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const inputFile = document.querySelector("#avatar");
+    const sendCodeBtn = document.querySelector("#sendCode");
+    sendCodeBtn.addEventListener("click", async e => {
+        // console.log(isConfirmationCodeSent)
+        let response = await fetch('/users/send-code', {
+            method: "POST"
+        });
+        response = await response.json();
+        if(response.ok) {
+            const confirmationAlert = document.getElementById("confirmationAlert");
+            confirmationAlert.innerHTML = `<input type="text">
+                    <button id="confirm" class="btn btn-primary">Confirm</button>`
+            confirm()
+        }
+    })
+    function confirm() {
+        const confirmBtn = document.getElementById('confirm');
+        confirmBtn.addEventListener("click", async e => {
+            const code = e.target.previousElementSibling.value;
+            if(code) {
+                const body = JSON.stringify({
+                    code
+                });
+                let response = await fetch('/users/confirm', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body
+                });
+                response = await response.json();
+                if(response.ok) window.location.reload()
+                else alert(response.message)
+            }
+        })
+    }
+    inputFile.addEventListener("change", async e => {
+        const avatar = e.target.files[0];
+        const formData = new FormData();
+        formData.append("avatar", avatar);
+        let response = await fetch("/users/avatar", {
+            method: "POST",
+            body: formData
+        });
+        response = await response.json();
+        if(response.ok) {
+            window.location.reload()
+        } else {
+            alert(response.message)
+        }
+    })
+    const newPostForm = document.querySelector("#newPostForm");
+    newPostForm.addEventListener("submit", async e => {
+        e.preventDefault();
+        const description = newPostForm.querySelector("input[name='description']");
+        const file = newPostForm.querySelector("input[name='post']");
+        const formData = new FormData();
+        formData.append("post", file.files[0]);
+        formData.append("description", description);
+        let response = await fetch(`/posts`, {
+            method: "POST",
+            body: formData
+        });
+        response = await response.json()
+        if(response.ok) window.location.reload()
+        else alert(response.message)
+    })
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+</body>
+</html>

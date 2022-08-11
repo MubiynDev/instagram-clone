@@ -1,0 +1,75 @@
+<% posts.forEach(post => { %>
+    <div class="post">
+        <div class="info">
+            <div class="user">
+                <div class="profile-pic"><img src="<%=post.user.avatar%>" alt=""></div>
+                <p class="username"><%=post.user.username%></p>
+            </div>
+            <img src="/public/images/option.PNG" class="options" alt="">
+        </div>
+        <img src="<%=post.src%>" class="post-image" alt="">
+        <div class="post-content">
+            <div class="reaction-wrapper">
+                <a href="/posts/<%=post._id%>/like">
+                     <% if(post.likes.find(like => like.userId?.toString() === user._id?.toString())) { %> 
+                        <img src="/public/images/heart.PNG" class="icon" alt="">
+                        <% } else { %>
+                            <img src="/public/images/like.PNG" class="icon" alt="">
+                    <% } %>   
+                    
+                </a>
+                <a href="/posts/<%=post._id%>/comments" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    <img src="/public/images/comment.PNG" class="icon" alt="">
+                </a>
+                <img src="img/send.PNG" class="icon" alt="">
+                <img src="img/save.PNG" class="save icon" alt="">
+            </div>
+            <% if(post.likes.length > 0 ) { %>
+            <p class="likes"><%=post.likes.length%></p>
+            <% } %>
+            <% if(post.description != 'null') { %>
+            <p class="description"><span><%=post.user.username%> </span> <%=post.description || ''%></p>
+            <% } %>
+            <p class="post-time"><%=Math.round((Date.now() - post.createdAt) / 1000 / 60) %> minutes ago</p>
+        </div>
+        <div class="comment-wrapper">
+            <img src="/public/images/smile.PNG" class="icon" alt="">
+                <input type="text" class="comment-box" id="commentText" placeholder="Add a comment">
+                <button class="comment-btn" data-post-id="<%=post._id%>" id="postCommentBtn">post</button>
+        </div>
+    </div>
+<% }) %>
+
+
+  
+ 
+
+<script>
+    const commentPostBtns = document.querySelectorAll("#postCommentBtn")
+    commentPostBtns.forEach(btn => {
+        btn.addEventListener("click", async e => {
+            const commentText = e.target.previousElementSibling
+            const text = commentText.value;
+            console.log(text)
+            if(text) {
+                const body = {
+                    text
+                };
+                const postId = e.target.dataset.postId;
+                let response = await fetch(`/posts/${postId}/comment`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body),
+                });
+                response = await response.json();
+                if(response.ok) {
+                    window.location.reload()
+                } else {
+                    alert(response.message)
+                }
+            }
+        })
+    })
+</script>

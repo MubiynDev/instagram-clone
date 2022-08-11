@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/comments.css">
+    <title>comments</title>
+</head>
+<body>
+    
+<div class="container test d-flex justify-content-center">
+    <div class="row">
+        <div class="col-md-12">
+  
+          <div class="card">
+  
+            <div class="comment-widgets m-b-10">
+  
+               <% if(comments.length) { %>             
+                <%comments.forEach(comment => { %> 
+                    
+                    <div class="d-flex flex-row comment-row">
+                        <div class="p-2"><span class="round"><img src="<%=comment.user.avatar%>" alt="user" width="50"></span></div>
+                        <div class="comment-text w-100">
+                            <h5 style="font-size:22px; margin: 0;"><%=comment.user.username%></h5>
+                            <div class="comment-footer">
+                                <span class="date"><%=comment.date%></span>
+                              
+                            <p class="m-b-5 m-t-10"><%=comment.text%></p>
+                        </div>
+                    </div>
+
+            </div>
+                    
+                <% }) %>         
+                <% } else { %>
+                    <p style="font-size:23px; text-align:center">This post has no comments yet :(</p>
+                <% } %>  
+        </div>
+    </div>
+  </div>
+</body>
+</html>
