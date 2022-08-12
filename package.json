@@ -5,9 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js",
-    "build": "ng build",
-    "heroku-prebuild": "npm install"
+    "start": "node src/server.js"
+    
  
 
   },
