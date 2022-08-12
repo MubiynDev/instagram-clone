@@ -11,6 +11,7 @@ module.exports = async (req, res, next) => {
         if(!payload) {
             // throw new Error("You are not logged");
             res.redirect("/users/login")
+            return
         } 
 
         const session = await sessions.findById(payload.sessionId);
