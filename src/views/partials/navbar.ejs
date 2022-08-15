@@ -26,7 +26,7 @@
         searchText = searchText.toLowerCase()
         
         console.log(searchText)
-        let response  = await fetch(`/users/search?q='${searchText}'`)
+        let response  = await fetch(`/users/search?q=${searchText}`)
 
         response = await response.json()
     
