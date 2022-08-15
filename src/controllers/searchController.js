@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
                 $regex: '.*' + q + '.*'  // `/^${q}/i`
             }
         })
-        console.log(results, q)
+        
         
         res.status(200).json({
             results

@@ -10,6 +10,7 @@ const messages = require("./models/messages")
 const sessions = require("./models/sessions")
 const users = require("./models/users")
 const {verifyJWT} = require("./modules/jwt");
+const { compareHash } = require("./modules/bcrypt");
 const app = express();
 const server = http.createServer(app)
 

@@ -1,3 +1,29 @@
+<style>
+    .search-result-modal {
+        background: rgb(255, 255, 255);
+        width: 300px;
+        height: 300px;
+        border-radius: 5px;
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform:translateX(-50%);
+        display: none;
+        overflow-y: scroll;
+        padding: 10px 20px;
+    }
+    .result-ul {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .result-item {
+        text-decoration: none;
+        color: #000;
+        font-size: 24px;
+
+    }
+</style>
 <nav class="navbar">
     <div class="nav-wrapper">
         <img src="/public/images/logo.PNG" class="brand-img" alt="">
@@ -13,11 +39,11 @@
     </div>
 </nav>
 
- <!-- <div class="search-result-modal">
-    <ul>
-
+ <div class="search-result-modal">
+    <ul class="result-ul">
+    
     </ul>
- </div> -->
+ </div>
 
 <script>
     const searchInput = document.querySelector(".search-box")
@@ -25,14 +51,25 @@
         let searchText = e.target.value
         searchText = searchText.toLowerCase()
         
-        console.log(searchText)
+        
         let response  = await fetch(`/users/search?q=${searchText}`)
 
         response = await response.json()
+        response.results.map(el => {
+            let newLi = document.createElement("a")
+            newLi.textContent = `${el.username}`
+            newLi.href = `/users/${el.username}`
+            newLi.className = "result-item"
+            let results = document.querySelector(".result-ul")
+            
+            results.appendChild(newLi)
     
-        const newLi = `<li>
-
-            </li>`
-        console.log(response)
+    
+        })
+        
+        document.querySelector(".search-result-modal").style.display = "block"
+    
+        
+        response.results.map(el => console.log(el))
     })
 </script>
